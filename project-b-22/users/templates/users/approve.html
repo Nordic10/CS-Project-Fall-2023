@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete</title>
+    {% load static %}
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    <style>
+        h2{
+            color: #D3D3D3;
+        }
+        body {
+            background-color: #D3D3D3;
+            color: #333;
+            font-family: 'Arial', sans-serif;
+        }
+
+        header {
+            padding: 1rem 0;
+            background-color: #30475E;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        ul{
+            list-style-type: none;
+            padding: 0;
+            background-color: white;
+            color: black;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 3px solid #228B22
+        }
+        li{
+                        list-style-type: none;
+            padding: 0;
+            background-color: #30475E;
+            color: #D3D3D3;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 3px solid #228B22
+        }
+        a {
+            color: #228B22;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .card-text {
+            font-size: 1rem; 
+            margin-bottom: 0.5rem;
+            color: #ffffff;
+        }
+
+        .btn-custom {
+            background-color: #228B22;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>Approve Reviews</h2>
+    </header>
+
+    <div class="container mt-3">
+        {% if empty %}
+            <h4>There are no Reviews to Approve</h4>
+        {% else %}
+            <a href="/approve_all/" class="btn btn-custom">Approve All Reviews</a>
+        {% endif %}
+        <ul>
+            {% for r in reviews %}
+                <li>
+                    <p>{{ r.campsite }}</p>
+                    <p>{{ r.user_email }}</p>
+                    <p>{{ r.rating }} stars</p>
+                    <p>{{ r.site_description }}</p>
+
+                    {% if r.allows_campfires  == 1 %}
+                        <p class="card-text">Allows Campfires: Yes</p>
+                    {% elif r.allows_campfires  == -1 %}
+                        <p class="card-text">Allows Campfires: No</p>
+                    {% endif %}
+
+                    {% if r.potable_water  == 1 %}
+                        <p class="card-text">Has Potable Water: Yes</p>
+                    {% elif r.potable_water  == -1 %}
+                        <p class="card-text">Has Potable Water: No</p>
+                    {% endif %}
+
+                    {% if r.outhouse  == 1 %}
+                        <p class="card-text">Allows Campfires: Yes</p>
+                    {% elif r.outhouse  == -1 %}
+                        <p class="card-text">Allows Campfires: No</p>
+                    {% endif %}
+
+                    {% if r.nearby_trees  == 1 %}
+                        <p class="card-text">Near Trees: Yes</p>
+                    {% elif r.nearby_trees  == -1 %}
+                        <p class="card-text">Near Trees: No</p>
+                    {% endif %}
+
+                    {% if r.trail_access  == 1 %}
+                        <p class="card-text">Near Trails: Yes</p>
+                    {% elif r.trail_access  == -1 %}
+                        <p class="card-text">Near Trails: No</p>
+                    {% endif %}
+
+                    {% if r.has_bugs  == 1 %}
+                        <p class="card-text">Lots of Bugs in the Area: Yes</p>
+                    {% elif r.has_bugs  == -1 %}
+                        <p class="card-text">Lots of Bugs in the Area: No</p>
+                    {% endif %}
+
+                    {% if r.equipment_access  == 1 %}
+                        <p class="card-text">Near Equipment Rentals: Yes</p>
+                    {% elif r.equipment_access  == -1 %}
+                        <p class="card-text">Near Equipment Rentals: No</p>
+                    {% endif %}
+
+                    {% if r.privacy_rating  == 1 %}
+                        <p class="card-text">Private: Yes</p>
+                    {% elif r.privacy_rating  == -1 %}
+                        <p class="card-text">Private: No</p>
+                    {% endif %}
+
+                    
+                    <a href="{% url 'review_delete' r.campsite.id r.id %}" class="btn btn-custom">Deny this Review</a>
+                    <a href="{% url 'approve_one' r.id %}" class="btn btn-custom">Approve this Review</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="/" class="btn btn-custom">Back to Home</a>
+    </div>
+
+    {% bootstrap_javascript %}
+</body>
+</html>

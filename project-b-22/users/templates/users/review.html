@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review</title>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% load static %}
+    {% bootstrap_javascript %}
+
+    
+    <style>
+        body {
+            background-color: #D3D3D3; 
+            color: #333; 
+            font-family: 'Arial', sans-serif; 
+        }
+
+        header {
+            padding: 1rem 0;
+            background-color: #fff; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: left; 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .logo-container img {
+            height: 50px;
+        }
+
+        .container {
+            padding: 2rem;
+            padding-top: 100px; 
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+            position: relative;
+        }
+
+        .form-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background-color: #228B22;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .form-heading {
+            position: relative;
+            color: white;
+            z-index: 10;
+            margin-top: -80px; 
+            padding-left: 20px; 
+            background: transparent;
+        }
+
+
+        .form-control {
+            margin-bottom: 1rem;
+        }
+
+        .btn-submit {
+            background-color: #228B22;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 2px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .btn-submit:hover {
+            background-color: #196F3D; 
+        }
+
+        .cancel-link {
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<header style="padding: 10px 0; background-color: #30475E; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); text-align: left; position: relative; display: flex; align-items: center;">
+    <div style="padding-left: 15px;">
+        <img src="{% static 'admin/images/logo.png' %}" alt="Logo" style="height: auto; max-height: 80px;">
+    </div>
+    
+</header>
+<body>
+    {% load socialaccount %}
+
+    <div class="container">
+        <div class="form-overlay"></div> 
+        <h2 class="form-heading">Leave a Review for {{ campsite.site_name }}</h2> 
+        <form action="" method="post">
+            {% csrf_token %}
+            <h4>Required Fields</h4>
+            <p>How Would you Rate this Campsite?</p>
+
+            <select name="star_rating" class="form-control">
+                <option value="">Select a Rating</option>
+                <option value="1">&#9733; &#9734; &#9734; &#9734; &#9734; (1 Star)</option>
+                <option value="2">&#9733; &#9733; &#9734; &#9734; &#9734; (2 Stars)</option>
+                <option value="3">&#9733; &#9733; &#9733; &#9734; &#9734; (3 Stars)</option>
+                <option value="4">&#9733; &#9733; &#9733; &#9733; &#9734; (4 Stars)</option>
+                <option value="5">&#9733; &#9733; &#9733; &#9733; &#9733; (5 Stars)</option>
+            </select>
+        
+            
+            <p>Please Provide a Description of Your Experience</p>
+            <p>{{ form.site_description }}</p>
+
+            <h4>Not Required Fields</h4>
+            <ol>
+                <li>Allows Campfires {{ form.allows_campfires }}</li>
+                <li>Has Potable Water {{ form.potable_water }}</li>
+                <li>Near an Outhouse {{ form.outhouse }}</li>
+                <li>Near Trees {{ form.nearby_trees }}</li>
+                <li>Near Trails {{ form.trail_access }}</li>
+                <li>Lots of Bugs in the Area {{ form.has_bugs }}</li>
+                <li>Near Equipment Rentals {{ form.equipment_access }}</li>
+                <li>Reasonably Private {{ form.privacy_rating }}</li>
+            </ol>
+
+            <p>Note: Your review will be posted on the website after admin approval</p>
+
+            <input type="submit" class="btn-submit" value="Submit Review">
+        </form>
+        <a href="{% url 'details' campsite.id %}" class="cancel-link">Cancel</a>
+    </div>
+</body>
+</html>

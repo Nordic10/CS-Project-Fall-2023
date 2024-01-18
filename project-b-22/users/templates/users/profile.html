@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+
+
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    {% load static %}
+    {% load bootstrap5 %}
+    <style>
+        body {
+            background-color: #D3D3D3;
+            color: #333;
+            font-family: 'Arial', sans-serif;
+        }
+
+        header {
+            padding: 1rem 0;
+            background-color: #30475E;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        ul{
+            list-style-type: none;
+            padding: 0;
+            background-color: white;
+            color: black;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 3px solid #228B22
+        }
+        li{
+                        list-style-type: none;
+            padding: 0;
+            background-color: #30475E;
+            color: #D3D3D3;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 3px solid #228B22
+        }
+        a {
+            color: #228B22;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .nested-list {
+            background-color: transparent;
+            color: #D3D3D3;
+            border: none;
+            padding-left: 20px;
+        }
+
+        .btn-custom {
+            background-color: #228B22;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .btn-custom-small {
+            background-color: #228B22;
+            color: white;
+            border: none;
+            padding: 7px 10px;
+            border-radius: 3px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .btn-custom:hover {
+            background-color: darken(#228B22, 10%);
+            text-decoration: none;
+            color: white;
+        }
+        .btn-custom-small:hover {
+            background-color: darken(#228B22, 10%);
+            text-decoration: none;
+            color: white;
+        }
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card-body {
+            text-align: center;
+        }
+    </style>
+
+    <title>User Profile</title>
+</head>
+
+<header style="padding: 10px 0; background-color: #30475E; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); text-align: left; position: relative; display: flex; align-items: center;">
+    <div style="padding-left: 15px;">
+        <img src="{% static 'admin/images/logo.png' %}" alt="Logo" style="height: auto; max-height: 80px;">
+    </div>
+    
+</header>
+
+<body>
+
+<div class="container my-5">
+    <div class="colMS">
+        <div class="col-lg-4 mb-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <img src="{{ user.profile.profile_picture.url }}" class="rounded-circle img-fluid mb-2" alt="Default Profile Image" style="width: 150px; height: 150px; border: 3px solid #228B22">
+                    <h3 class="card-title" style="font-size: 30px">{{ user.username }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body" >
+                    <h4 class="card-title">Profile Details:</h4>
+                    <div class="list-group list-group-flush">
+                        <p class="list-group-item"><i class="fas fa-envelope profile-icon"></i>&nbsp;Email: {{ user.email }}</p>
+                        <p class="list-group-item"><i class="fas fa-calendar-alt profile-icon"></i>&nbsp;Joined: {{ user.date_joined }}</p>
+                        <a href="{% url 'upload_profile_picture' %}" class="btn btn-custom-small">Change Picture</a>
+                    </div>
+
+                    <ul>
+                        <h4 class="card-title">Favorited Campsites</h4>
+                        {% for f in favorites %}
+                            <li>
+                                <h4>{{f.campsite}}</h4>
+                                <a href="{% url 'details' f.campsite.id %}" class="btn btn-custom-small">Go to Campsite</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <a href="/" class="btn btn-custom">Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+
+

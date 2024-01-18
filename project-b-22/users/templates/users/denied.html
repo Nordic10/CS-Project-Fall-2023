@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Denied</title>
+    {% load static %}
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    <style>
+        h2{
+            color: #D3D3D3;
+        }
+        body {
+            background-color: #D3D3D3;
+            color: #333;
+            font-family: 'Arial', sans-serif;
+        }
+
+        header {
+            padding: 1rem 0;
+            background-color: #30475E;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        ul{
+            list-style-type: none;
+            padding: 0;
+            background-color: white;
+            color: black;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 3px solid #228B22
+        }
+        li{
+                        list-style-type: none;
+            padding: 0;
+            background-color: #30475E;
+            color: #D3D3D3;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 3px solid #228B22
+        }
+        a {
+            color: #228B22;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .nested-list {
+            background-color: transparent;
+            color: #D3D3D3;
+            border: none;
+            padding-left: 20px;
+        }
+
+        .btn-custom {
+            background-color: #228B22;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .btn-custom-small {
+            background-color: #228B22;
+            color: white;
+            border: none;
+            padding: 7px 10px;
+            border-radius: 3px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .btn-custom:hover {
+            background-color: darken(#228B22, 10%);
+            text-decoration: none;
+            color: white;
+        }
+        .btn-custom-small:hover {
+            background-color: darken(#228B22, 10%);
+            text-decoration: none;
+            color: white;
+        }
+        .row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card-body {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h2>Access Denied</h2>
+    </header>
+
+    <div class="container">
+        {% if error_number == 0 %}
+            <div class="message">
+                <h4>You have already left a review on this campsite</h4>
+                <a href="{% url 'details' campsite.id %}" class="btn btn-custom">Back to Campsite Page</a>
+            </div>
+        {% elif error_number == 1 %}
+            <div class="message">
+                <h4>You do not have access to this page</h4>
+                <a href="/" class="btn btn-custom">Back to Home</a>
+            </div>
+        {% endif %}
+    </div>
+
+    {% bootstrap_javascript %}
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campsite Reviews</title>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+    {% load static %}
+    {% bootstrap_javascript %}
+    <style>
+        body {
+            background-color: #D3D3D3; 
+            color: #333; 
+            font-family: 'Arial', sans-serif; 
+        }
+
+        header {
+        padding: 10px 0; /* Adjust this padding to ensure vertical centering */
+        background-color: #30475E; 
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        text-align: left; 
+        display: flex;
+        justify-content: space-between;
+        align-items: center; /* This ensures vertical centering of children */
+    }
+
+    .logo-container {
+        padding-left: 15px; /* Only left padding is necessary */
+    }
+
+    .logo-container img {
+        height: auto; /* Auto height for maintaining aspect ratio */
+        max-height: 80px; /* Adjust max-height to fit the logo within the header */
+    }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .auth-button {
+            background-color: #228B22;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: background-color 0.3s;
+        }
+
+        .auth-button:hover {
+            background-color: #228B22;
+        }
+
+        .btn-profile, .btn-logout {
+            background-color: #228B22;
+        }
+
+        .btn-google {
+            background-color: #228B22; 
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 2px;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: background-color 0.3s;
+        }
+        .btn-google:hover {
+            background-color: #228B22; 
+        }
+
+        #search-container {
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+            margin-top: 10px;
+        }
+
+        #map-and-list-container {
+            display: flex;
+            flex-direction: row;
+            gap: 1rem; 
+        }
+
+        #googleMap {
+            flex: 3;
+            height: 90vh;
+            border: 3px solid #228B22; 
+            border-radius: 8px; 
+        }
+        .input-group-text {
+            background-color: #228B22; 
+            border: none; 
+        }
+        .fa-location-dot {
+            color: #D3D3D3; 
+        }
+        #campsite-list-container {
+            background-color: #30475E;
+            color: #D3D3D3; 
+            padding: 1rem;
+            border-radius: 8px; 
+            flex: 1; 
+            height: 90vh; 
+            overflow-y: auto; 
+            border: 3px solid #228B22; 
+
+        }
+        #campsite-list-container {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column; 
+        }
+
+        .campsite-btn {
+            background-color: #228B22;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            display: block; 
+            text-align: center;
+            margin-bottom: 10px;
+            width: auto; 
+        }
+
+        .campsite-btn:hover {
+            background-color: #196F3D;
+        }
+
+        @media (max-width: 768px) {
+            #map-and-list-container {
+                flex-direction: column;
+            }
+
+            #googleMap,
+            #campsite-list-container {
+                flex: none;
+                width: 100%; 
+            }
+
+            #links {
+                flex: none;
+                width: 100%;
+            }
+        }
+
+        .welcome-message {
+            text-align: center;
+            padding: 10px;
+            color: #ffffff; 
+            flex-grow: 1; 
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        .animated-text {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 3s steps(30, end) infinite; 
+            border-right: 3px solid #D3D3D3; 
+            box-sizing: border-box;
+            font-weight: bold; 
+            color: #D3D3D3; 
+            font-size: 30px; 
+
+        }
+
+    </style>
+</head>
+<body>
+    {% load socialaccount %}
+    <header>
+        <div class="header-container">
+            <div class="logo-container">
+                <img src="{% static 'admin/images/logo.png' %}" alt="Campsite Reviews Logo">
+            </div>
+            <div class="welcome-message">
+                <span class="animated-text">Welcome to Campster!</span>
+            </div>
+            <div class="auth-buttons">
+                {% if user.is_authenticated and is_admin%}
+                <a href="approval/" class="auth-button btn-profile">
+                    <i class="fa-solid fa-check" style="color: #D3D3D3; margin-right: 5px;"></i> Approve Reviews
+                </a>
+                {% endif %}
+                {% if user.is_authenticated %}
+                <a href="profile/" class="auth-button btn-profile">
+                    <i class="fa-solid fa-user" style="color: #D3D3D3; margin-right: 5px;"></i> Your Profile
+                </a>
+                <a href="logout" class="auth-button btn-logout">
+                    <i class="fa-solid fa-right-from-bracket" style="color: #D3D3D3; margin-right: 5px;"></i> Logout
+                </a>
+                {% else %}
+                <a href="{% provider_login_url 'google' %}?next=/" class="auth-button btn-google">
+                    <i class="fa-solid fa-lock" style="color: #D3D3D3; margin-right: 5px;"></i> Sign in with Google
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <div id="search-container" class="container">
+        <form action="{% url 'search_places' %}" method="get" class="input-group mb-3">
+            <span class="input-group-text">
+            <i class="fa-solid fa-location-dot" style="color: #D3D3D3;"></i>
+            </span>
+            <input type="text" class="form-control" name="query" placeholder="Where to?" aria-label="Where to?" aria-describedby="button-addon2">
+            <input type="submit" class="btn btn-outline-secondary" id="button-addon2" value="Search">
+        </form>
+    </div>
+
+    <div id="map-and-list-container" class="container">
+        <div id="googleMap"></div>
+        <div id="campsite-list-container">
+            <h4>Campsites</h4>
+            {% for campsite in campsite_list %}
+                <a href="{% url 'details' campsite.id %}" class="campsite-btn">{{ campsite.site_name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    </div>
+    <script type="text/javascript">
+        var customMarkerIconUrl = "{% static 'admin/images/campground-solid.png' %}";
+    </script>
+    <script>
+        function myMap(callback) {
+
+            function updateCampsiteList(campsites) {
+                var container = document.getElementById('campsite-list-container');
+                var htmlContent = '<h4>Campsites</h4>';
+                for (var i = 0; i < campsites.length; i++) {
+                    var campsite = campsites[i];
+                    htmlContent += '<a href="' + campsite.url + '" class="campsite-btn">' + campsite.site_name + '</a>';
+                }
+                container.innerHTML = htmlContent;
+            }
+            function handleMapBounds(mapbounds) {
+                campsiteDataInBounds = []; 
+                for (var i = 0; i < campsiteData.length; i++) {
+                    var campsite = campsiteData[i];
+                    var campsiteLatLng = new google.maps.LatLng(campsite.lat, campsite.long);
+                    if (mapbounds.contains(campsiteLatLng)){
+                        campsiteDataInBounds.push(campsite);
+                    }
+                }
+            }
+            var mapProp = {
+                center: new google.maps.LatLng(51.508742, -0.120850),
+                zoom: 5,
+            };
+            var iconSize = new google.maps.Size(18, 22);
+            var campsiteData = [
+                {% for campsite in campsite_list %}
+                    {
+                        lat: {{ campsite.lat }},
+                        long: {{ campsite.long }},
+                        site_name: "{{ campsite.site_name }}",
+                        url: "{% url 'details' campsite.id %}"
+                    },
+                {% endfor %}
+            ];
+            var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+            for (var i = 0; i < campsiteData.length; i++) {
+                var campsite = campsiteData[i];
+                var markerPosition = new google.maps.LatLng(campsite.lat, campsite.long);
+                var marker = new google.maps.Marker({
+                    position: markerPosition,
+                    map: map,
+                    title: campsite.site_name,
+                    icon: {
+                url: customMarkerIconUrl,
+                size: iconSize,
+                scaledSize: iconSize
+            }
+                });
+                marker.url = campsite.url;
+
+                google.maps.event.addListener(marker, 'click', function() {
+                window.location.href = this.url;
+                });
+            }
+
+            map.addListener("bounds_changed", () => {
+                var mapbounds = map.getBounds()
+                handleMapBounds(mapbounds);
+                updateCampsiteList(campsiteDataInBounds);
+                campsiteDataInBounds = [];
+            })
+
+            var mapbounds = map.getBounds()
+            handleMapBounds(mapbounds);
+            updateCampsiteList(campsiteDataInBounds);
+
+
+        }
+        </script>
+
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVwOx-8ymMZ8vm37DPUMSufX6zU58fdc4&callback=myMap" async defer></script>
+</body>
+</html>
